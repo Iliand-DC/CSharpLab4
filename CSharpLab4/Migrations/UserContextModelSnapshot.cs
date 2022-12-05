@@ -67,9 +67,6 @@ namespace CSharpLab4.Migrations
                     b.Property<string>("Position")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TeamID")
-                        .HasColumnType("int");
-
                     b.HasKey("ID");
 
                     b.ToTable("Players");
@@ -77,11 +74,11 @@ namespace CSharpLab4.Migrations
 
             modelBuilder.Entity("CSharpLab4.Models.Team", b =>
                 {
-                    b.Property<int>("TeamID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TeamID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<int>("CoachID")
                         .HasColumnType("int");
@@ -89,7 +86,7 @@ namespace CSharpLab4.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("TeamID");
+                    b.HasKey("ID");
 
                     b.HasIndex("CoachID");
 
@@ -101,12 +98,12 @@ namespace CSharpLab4.Migrations
                     b.Property<int>("PlayersID")
                         .HasColumnType("int");
 
-                    b.Property<int>("TeamsTeamID")
+                    b.Property<int>("TeamsID")
                         .HasColumnType("int");
 
-                    b.HasKey("PlayersID", "TeamsTeamID");
+                    b.HasKey("PlayersID", "TeamsID");
 
-                    b.HasIndex("TeamsTeamID");
+                    b.HasIndex("TeamsID");
 
                     b.ToTable("PlayerTeam");
                 });
@@ -132,7 +129,7 @@ namespace CSharpLab4.Migrations
 
                     b.HasOne("CSharpLab4.Models.Team", null)
                         .WithMany()
-                        .HasForeignKey("TeamsTeamID")
+                        .HasForeignKey("TeamsID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

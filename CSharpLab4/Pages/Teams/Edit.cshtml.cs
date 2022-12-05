@@ -30,13 +30,13 @@ namespace CSharpLab4.Pages.Teams
                 return NotFound();
             }
 
-            var team =  await _context.Teams.FirstOrDefaultAsync(m => m.TeamID == id);
+            var team =  await _context.Teams.FirstOrDefaultAsync(m => m.ID == id);
             if (team == null)
             {
                 return NotFound();
             }
             Team = team;
-            ViewData["CoachID"] = new SelectList(_context.Coachs, "CoachID", "FirstName");
+           ViewData["CoachID"] = new SelectList(_context.Coachs, "CoachID", "FirstName");
             return Page();
         }
 
@@ -57,7 +57,7 @@ namespace CSharpLab4.Pages.Teams
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!TeamExists(Team.TeamID))
+                if (!TeamExists(Team.ID))
                 {
                     return NotFound();
                 }
@@ -72,7 +72,7 @@ namespace CSharpLab4.Pages.Teams
 
         private bool TeamExists(int id)
         {
-          return _context.Teams.Any(e => e.TeamID == id);
+          return _context.Teams.Any(e => e.ID == id);
         }
     }
 }

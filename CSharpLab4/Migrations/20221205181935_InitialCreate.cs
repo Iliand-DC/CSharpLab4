@@ -33,8 +33,7 @@ namespace CSharpLab4.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Position = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Age = table.Column<int>(type: "int", nullable: false),
-                    TeamID = table.Column<int>(type: "int", nullable: false)
+                    Age = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -45,14 +44,14 @@ namespace CSharpLab4.Migrations
                 name: "Teams",
                 columns: table => new
                 {
-                    TeamID = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CoachID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Teams", x => x.TeamID);
+                    table.PrimaryKey("PK_Teams", x => x.ID);
                     table.ForeignKey(
                         name: "FK_Teams_Coachs_CoachID",
                         column: x => x.CoachID,
@@ -66,11 +65,11 @@ namespace CSharpLab4.Migrations
                 columns: table => new
                 {
                     PlayersID = table.Column<int>(type: "int", nullable: false),
-                    TeamsTeamID = table.Column<int>(type: "int", nullable: false)
+                    TeamsID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PlayerTeam", x => new { x.PlayersID, x.TeamsTeamID });
+                    table.PrimaryKey("PK_PlayerTeam", x => new { x.PlayersID, x.TeamsID });
                     table.ForeignKey(
                         name: "FK_PlayerTeam_Players_PlayersID",
                         column: x => x.PlayersID,
@@ -78,17 +77,17 @@ namespace CSharpLab4.Migrations
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PlayerTeam_Teams_TeamsTeamID",
-                        column: x => x.TeamsTeamID,
+                        name: "FK_PlayerTeam_Teams_TeamsID",
+                        column: x => x.TeamsID,
                         principalTable: "Teams",
-                        principalColumn: "TeamID",
+                        principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PlayerTeam_TeamsTeamID",
+                name: "IX_PlayerTeam_TeamsID",
                 table: "PlayerTeam",
-                column: "TeamsTeamID");
+                column: "TeamsID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Teams_CoachID",

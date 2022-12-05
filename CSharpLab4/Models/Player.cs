@@ -26,7 +26,6 @@ namespace CSharpLab4.Models
         }
         public string Position { get; set; }
         public int Age { get; set; }
-        public int TeamID { get; set; }
         public ICollection<Team> Teams { get; set; }
         public Player()
         {

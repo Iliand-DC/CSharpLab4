@@ -25,7 +25,7 @@
     <tbody>
     @foreach (var item in Model.TeamData.Teams) {
             string selectedRow = "";
-            if(item.TeamID==Model.TeamID)
+            if(item.ID==Model.TeamID)
             {
                 selectedRow = "table-success";
             }
@@ -45,16 +45,15 @@
                     }
             </td>
             <td>
-                <a asp-page="./Index" asp-route-id="@item.TeamID">Select</a>
-                <a asp-page="./Edit" asp-route-id="@item.TeamID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.TeamID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.TeamID">Delete</a>
+                <a asp-page="./Index" asp-route-id="@item.ID">Select</a>
+                <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
-
 @if (Model.TeamData.Players!=null)
 {
     <h3>Players Taught by Selected Team</h3>

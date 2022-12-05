@@ -23,6 +23,31 @@
                 <select asp-for="Team.CoachID" class ="form-control" asp-items="ViewBag.CoachID"></select>
             </div>
             <div class="form-group">
+                <div class="table">
+                    <table>
+                        <tr>
+                            @{
+                                int cnt = 0;
+                                foreach(var player in Model.AssignedPlayerDataList)
+                                {
+                                    if(cnt++ % 3 == 0)
+                                    {
+                                        @:</tr><tr>
+                                    }
+                                    @:<td>
+                                        <input type="checkbox"
+                                               name="selectedPlayers"
+                                               value="@player.PlayerID"
+                                               @(Html.Raw(player.Assigned ? "checked=\"checked\"" : ""))/>
+                                               @player.PlayerID @: @player.Name
+                                    @:</td>
+                                }
+                                @:</tr>
+                            }
+                    </table>
+                </div>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>

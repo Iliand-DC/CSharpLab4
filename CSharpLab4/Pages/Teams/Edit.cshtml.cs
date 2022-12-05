@@ -73,7 +73,7 @@ namespace CSharpLab4.Pages.Teams
             {
                 UpdateTeamPlayers(selectedPlayers, teamToUpdate);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("./Index");
+                return RedirectToPage("./Index");
             }
             UpdateTeamPlayers(selectedPlayers,teamToUpdate);
             PopulateAssignedPlayerData(_context, teamToUpdate);

@@ -20,8 +20,12 @@ namespace CSharpLab4.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            modelBuilder.Entity<Team>().ToTable(nameof(Teams));
-            modelBuilder.Entity<Player>().ToTable(nameof(Players));
+            modelBuilder.Entity<Team>()
+                .HasMany(team => team.Players)
+                .WithMany(player => player.Teams);
+            modelBuilder.Entity<Player>()
+                .HasMany(player => player.Teams)
+                .WithMany(team => team.Players);
             modelBuilder.Entity<Coach>().ToTable(nameof(Coachs));
         }
     }

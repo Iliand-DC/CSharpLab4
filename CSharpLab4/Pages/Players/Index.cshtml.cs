@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using CSharpLab4.Data;
 using CSharpLab4.Models;
-using CSharpLab4.Pages.Coaches;
 
 namespace CSharpLab4.Pages.Players
 {
@@ -22,11 +21,12 @@ namespace CSharpLab4.Pages.Players
 
         public IList<Player> Player { get;set; } = default!;
 
-
-        public async Task OnGetAsync(int? playerID, int? teamID)
+        public async Task OnGetAsync()
         {
-            Player = await _context.Players
-                .Include(c => c.Team).AsNoTracking().ToListAsync();
+            if (_context.Players != null)
+            {
+                Player = await _context.Players.ToListAsync();
+            }
         }
     }
 }

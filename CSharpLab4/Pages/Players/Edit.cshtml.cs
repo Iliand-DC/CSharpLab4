@@ -36,7 +36,7 @@ namespace CSharpLab4.Pages.Players
                 return NotFound();
             }
             Player = player;
-           ViewData["TeamID"] = new SelectList(_context.Teams, "TeamID", "TeamID");
+            ViewData["TeamID"] = new SelectList(_context.Teams, "TeamID", "Name");
             return Page();
         }
 

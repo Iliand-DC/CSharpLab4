@@ -28,6 +28,6 @@ namespace CSharpLab4.Models
         public int Age { get; set; }
         public int TeamID { get; set; }
         public Team Team { get; set; }
-        public ICollection<Enrollment> Enrollments { get; set; }
+        public ICollection<Team> Teams { get; set; }
     }
 }

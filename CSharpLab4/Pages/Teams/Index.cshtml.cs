@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using CSharpLab4.Data;
 using CSharpLab4.Models;
-using CSharpLab4.Models.UserViewModels;
 
 namespace CSharpLab4.Pages.Teams
 {

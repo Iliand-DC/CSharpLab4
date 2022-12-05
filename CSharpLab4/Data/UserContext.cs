@@ -15,7 +15,6 @@ namespace CSharpLab4.Data
         }
 
         public DbSet<Player> Players { get; set; }
-        public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Team> Teams { get; set; }
         public DbSet<Coach> Coachs { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

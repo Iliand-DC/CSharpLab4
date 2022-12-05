@@ -7,5 +7,9 @@
         public ICollection<Player> Players { get; set; }
         public int CoachID { get; set; }
         public Coach Coach { get; set; }
+        public Team()
+        {
+            Players = new List<Player>();
+        }
     }
 }

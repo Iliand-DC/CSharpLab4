@@ -29,5 +29,9 @@ namespace CSharpLab4.Models
         public int TeamID { get; set; }
         public Team Team { get; set; }
         public ICollection<Team> Teams { get; set; }
+        public Player()
+        {
+            Teams = new List<Team>();
+        }
     }
 }

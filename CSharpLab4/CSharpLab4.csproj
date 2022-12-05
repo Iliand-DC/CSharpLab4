@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <Folder Include="Pages\Players\Many-to-many\" />
-    <Folder Include="Pages\Teams\Many-to-many\" />
   </ItemGroup>
 
 </Project>

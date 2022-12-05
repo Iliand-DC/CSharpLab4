@@ -38,7 +38,7 @@ namespace CSharpLab4.Pages.Teams
             {
                 return NotFound();
             }
-            PopulateAssignedPlayerData(_context, Team);
+            PopulateAssignedPlayerData(_context, team);
             ViewData["CoachID"] = new SelectList(_context.Coachs, "CoachID", "FirstName");
             return Page();
         }
@@ -60,12 +60,6 @@ namespace CSharpLab4.Pages.Teams
             {
                 return NotFound();
             }
-
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
             if(await TryUpdateModelAsync<Team>(
                 teamToUpdate,
                 "Team",

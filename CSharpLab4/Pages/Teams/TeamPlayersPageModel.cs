@@ -1,10 +1,13 @@
 ﻿using CSharpLab4.Data;
 using CSharpLab4.Models;
 using CSharpLab4.Models.UserViewModels;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CSharpLab4.Pages.Teams
 {
-    public class TeamPlayersPageModel
+    public class TeamPlayersPageModel: PageModel
     {
         public List<AssignedPlayerData> AssignedPlayerDataList { get; set; }
         public void PopulateAssignedPlayerData(UserContext context, Team team)

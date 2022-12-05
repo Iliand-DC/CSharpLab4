@@ -11,7 +11,7 @@ using CSharpLab4.Models;
 
 namespace CSharpLab4.Pages.Teams
 {
-    public class EditModel : PageModel
+    public class EditModel : TeamPlayersPageModel
     {
         private readonly CSharpLab4.Data.UserContext _context;
 
@@ -30,44 +30,104 @@ namespace CSharpLab4.Pages.Teams
                 return NotFound();
             }
 
-            var team =  await _context.Teams.FirstOrDefaultAsync(m => m.ID == id);
+            var team =  await _context.Teams
+                .Include(p=>p.Players)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.ID == id);
             if (team == null)
             {
                 return NotFound();
             }
-            Team = team;
-           ViewData["CoachID"] = new SelectList(_context.Coachs, "CoachID", "FirstName");
+            PopulateAssignedPlayerData(_context, Team);
+            ViewData["CoachID"] = new SelectList(_context.Coachs, "CoachID", "FirstName");
             return Page();
         }
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(int? id, string[] selectedPlayers)
         {
+            if(id==null)
+            {
+                return NotFound();
+            }
+
+            var teamToUpdate = await _context.Teams
+                .Include(p=>p.Players)
+                .FirstOrDefaultAsync(m => m.ID == id);
+            
+            if(teamToUpdate == null)
+            {
+                return NotFound();
+            }
+
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            _context.Attach(Team).State = EntityState.Modified;
-
-            try
+            if(await TryUpdateModelAsync<Team>(
+                teamToUpdate,
+                "Team",
+                p=>p.Name, p=>p.Coach, p=>p.CoachID))
             {
+                UpdateTeamPlayers(selectedPlayers, teamToUpdate);
                 await _context.SaveChangesAsync();
+                return RedirectToAction("./Index");
             }
-            catch (DbUpdateConcurrencyException)
+            UpdateTeamPlayers(selectedPlayers,teamToUpdate);
+            PopulateAssignedPlayerData(_context, teamToUpdate);
+            return Page();
+
+            //_context.Attach(Team).State = EntityState.Modified;
+
+            //try
+            //{
+            //    await _context.SaveChangesAsync();
+            //}
+            //catch (DbUpdateConcurrencyException)
+            //{
+            //    if (!TeamExists(Team.ID))
+            //    {
+            //        return NotFound();
+            //    }
+            //    else
+            //    {
+            //        throw;
+            //    }
+            //}
+
+            //return RedirectToPage("./Index");
+        }
+        public void UpdateTeamPlayers(string[] selectedPlayers, Team teamToUpdate)
+        {
+            if(selectedPlayers==null)
             {
-                if (!TeamExists(Team.ID))
+                teamToUpdate.Players = new List<Player>();
+                return;
+            }
+            var selectedPlayersHS = new HashSet<string>(selectedPlayers);
+            var teamPlayers = new HashSet<int>
+                (teamToUpdate.Players.Select(p => p.ID));
+            foreach(var player in _context.Players) 
+            {
+                if(selectedPlayersHS.Contains(player.ID.ToString()))
                 {
-                    return NotFound();
+                    if(!teamPlayers.Contains(player.ID))
+                    {
+                        teamToUpdate.Players.Add(player);
+                    }
                 }
                 else
                 {
-                    throw;
+                    if(teamPlayers.Contains(player.ID))
+                    {
+                        var playerToRemove = teamToUpdate.Players.Single(
+                            p => p.ID == player.ID);
+                        teamToUpdate.Players.Remove(playerToRemove);
+                    }
                 }
             }
-
-            return RedirectToPage("./Index");
         }
 
         private bool TeamExists(int id)

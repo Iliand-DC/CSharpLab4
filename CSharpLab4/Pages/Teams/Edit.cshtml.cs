@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CSharpLab4.Data;
 using CSharpLab4.Models;
+using Microsoft.Identity.Client;
 
 namespace CSharpLab4.Pages.Teams
 {
@@ -30,16 +31,18 @@ namespace CSharpLab4.Pages.Teams
                 return NotFound();
             }
 
-            var team =  await _context.Teams
+            Team =  await _context.Teams
+                .Include(c=>c.Coach)
                 .Include(p=>p.Players)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
 
-            if (team == null)
+            if (Team == null)
             {
                 return NotFound();
             }
-            PopulateAssignedPlayerData(_context, team);
+            //PopulateCoachesDropDownList(_context, Team.CoachID);
+            PopulateAssignedPlayerData(_context, Team);
             //ViewData["CoachID"] = new SelectList(_context.Coachs, "CoachID", "FirstName");
             return Page();
         }
@@ -54,6 +57,7 @@ namespace CSharpLab4.Pages.Teams
             }
 
             var teamToUpdate = await _context.Teams
+                .Include(c=>c.Coach)
                 .Include(p=>p.Players)
                 .FirstOrDefaultAsync(m => m.ID == id);
             
@@ -67,10 +71,13 @@ namespace CSharpLab4.Pages.Teams
                 p=>p.Name, p=>p.Coach, p=>p.CoachID))
             {
                 UpdateTeamPlayers(selectedPlayers, teamToUpdate);
+                //_context.Attach(Team).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return RedirectToPage("./Index");
             }
             UpdateTeamPlayers(selectedPlayers,teamToUpdate);
+            //_context.Attach(Team).State = EntityState.Modified;
+            //PopulateCoachesDropDownList(_context, teamToUpdate.CoachID);
             PopulateAssignedPlayerData(_context, teamToUpdate);
             return Page();
         }

@@ -18,14 +18,15 @@
                 <label asp-for="Team.Name" class="control-label"></label>
                 <input asp-for="Team.Name" class="form-control" />
                 <span asp-validation-for="Team.Name" class="text-danger"></span>
-            </div>
+            </div>@*
             <div class="form-group">
                 <label asp-for="Team.Coach" class="control-label"></label>
                 <select asp-for="Team.CoachID" class="form-control" asp-items="ViewBag.CoachID">
+                    asp-items="@Model.CoachNameSL">
                     <option value="">-- Select Coach --</option>
                 </select>
                 <span asp-validation-for="Team.CoachID" class="text-danger" />
-            </div>
+            </div>*@
             <div class="form-group">
                 <div class="table"
                     <table>

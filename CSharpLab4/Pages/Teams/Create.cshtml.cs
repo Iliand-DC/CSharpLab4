@@ -24,10 +24,11 @@ namespace CSharpLab4.Pages.Teams
 
         public IActionResult OnGet()
         {
-            ViewData["CoachID"] = new SelectList(_context.Coachs, "CoachID", "FirstName");
             var team = new Team();
             team.Players = new List<Player>();
             PopulateAssignedPlayerData(_context,team);
+            ViewData["CoachID"] = new SelectList(_context.Coachs, "CoachID", "FirstName");
+            //PopulateCoachesDropDownList(_context);
             return Page();
         }
 
@@ -74,17 +75,9 @@ namespace CSharpLab4.Pages.Teams
             {
                 _logger.LogError(ex.Message);
             }
+            //PopulateCoachesDropDownList(_context, newTeam.CoachID);
             PopulateAssignedPlayerData(_context,newTeam);
             return Page();
-            //if (!ModelState.IsValid)
-            //{
-            //    return Page();
-            //}
-
-            //_context.Teams.Add(Team);
-            //await _context.SaveChangesAsync();
-
-            //return RedirectToPage("./Index");
         }
     }
 }

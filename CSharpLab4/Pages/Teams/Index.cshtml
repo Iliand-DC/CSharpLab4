@@ -19,7 +19,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Team[0].Coach)
             </th>
-            <th></th>
+            <th>@Html.DisplayNameFor(model => model.Team[0].Players)</th>
         </tr>
     </thead>
     <tbody>
@@ -40,12 +40,12 @@
                     @{
                         foreach(var player in item.Players)
                         {
-                            @player.ID @: @player.FullName <br />
+                            @player.FullName <br />
                         }
                     }
             </td>
             <td>
-                <a asp-page="./Index" asp-route-id="@item.ID">Select</a>
+                @*<a asp-page="./Index" asp-route-id="@item.ID">Select</a>*@
                 <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
                 <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
                 <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>

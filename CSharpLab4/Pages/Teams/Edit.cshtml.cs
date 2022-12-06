@@ -25,7 +25,7 @@ namespace CSharpLab4.Pages.Teams
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Teams == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -34,12 +34,13 @@ namespace CSharpLab4.Pages.Teams
                 .Include(p=>p.Players)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
+
             if (team == null)
             {
                 return NotFound();
             }
             PopulateAssignedPlayerData(_context, team);
-            ViewData["CoachID"] = new SelectList(_context.Coachs, "CoachID", "FirstName");
+            //ViewData["CoachID"] = new SelectList(_context.Coachs, "CoachID", "FirstName");
             return Page();
         }
 
@@ -72,26 +73,6 @@ namespace CSharpLab4.Pages.Teams
             UpdateTeamPlayers(selectedPlayers,teamToUpdate);
             PopulateAssignedPlayerData(_context, teamToUpdate);
             return Page();
-
-            //_context.Attach(Team).State = EntityState.Modified;
-
-            //try
-            //{
-            //    await _context.SaveChangesAsync();
-            //}
-            //catch (DbUpdateConcurrencyException)
-            //{
-            //    if (!TeamExists(Team.ID))
-            //    {
-            //        return NotFound();
-            //    }
-            //    else
-            //    {
-            //        throw;
-            //    }
-            //}
-
-            //return RedirectToPage("./Index");
         }
         public void UpdateTeamPlayers(string[] selectedPlayers, Team teamToUpdate)
         {

@@ -7,20 +7,28 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using CSharpLab4.Data;
 using CSharpLab4.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CSharpLab4.Pages.Teams
 {
-    public class CreateModel : PageModel
+    public class CreateModel : TeamPlayersPageModel
     {
         private readonly CSharpLab4.Data.UserContext _context;
+        private readonly ILogger<TeamPlayersPageModel> _logger;
 
-        public CreateModel(CSharpLab4.Data.UserContext context)
+        public CreateModel(CSharpLab4.Data.UserContext context, ILogger<TeamPlayersPageModel> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public IActionResult OnGet()
         {
+            var team = new Team();
+            team.Players = new List<Player>();
+            PopulateAssignedPlayerData(_context,team);
+            ViewData["CoachID"] = new SelectList(_context.Coachs, "CoachID", "FirstName");
+            //PopulateCoachesDropDownList(_context);
             return Page();
         }
 
@@ -29,17 +37,47 @@ namespace CSharpLab4.Pages.Teams
         
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(string[] selectedPlayers) 
         {
-          if (!ModelState.IsValid)
+            var newTeam = new Team();
+            
+            if(selectedPlayers.Length > 0)
             {
-                return Page();
+                newTeam.Players = new List<Player>();
+                _context.Players.Load();
             }
-
-            _context.Teams.Add(Team);
-            await _context.SaveChangesAsync();
-
-            return RedirectToPage("./Index");
+            foreach(var player in selectedPlayers)
+            {
+                var foundPlayer = await _context.Players.FindAsync(int.Parse(player));
+                if(foundPlayer != null)
+                {
+                    newTeam.Players.Add(foundPlayer);
+                }
+                else
+                {
+                    _logger.LogWarning("Player {player} not found", player);
+                }
+            }
+            try
+            {
+                if (await TryUpdateModelAsync<Team>(
+                    newTeam,
+                    "Team",
+                    p => p.Coach, p => p.CoachID, p => p.Name)) ;
+                {
+                    _context.Teams.Add(newTeam);
+                    await _context.SaveChangesAsync();
+                    return RedirectToPage("./Index");
+                }
+                return RedirectToPage("./Index");
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
+            //PopulateCoachesDropDownList(_context, newTeam.CoachID);
+            PopulateAssignedPlayerData(_context,newTeam);
+            return Page();
         }
     }
 }

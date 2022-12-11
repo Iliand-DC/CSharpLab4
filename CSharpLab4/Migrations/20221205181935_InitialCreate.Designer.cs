@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CSharpLab4.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20221204133207_InitialCreate")]
+    [Migration("20221205181935_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -48,29 +48,6 @@ namespace CSharpLab4.Migrations
                     b.ToTable("Coachs", (string)null);
                 });
 
-            modelBuilder.Entity("CSharpLab4.Models.Enrollment", b =>
-                {
-                    b.Property<int>("EnrollmentID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EnrollmentID"));
-
-                    b.Property<int>("PlayerID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TeamID")
-                        .HasColumnType("int");
-
-                    b.HasKey("EnrollmentID");
-
-                    b.HasIndex("PlayerID");
-
-                    b.HasIndex("TeamID");
-
-                    b.ToTable("Enrollment");
-                });
-
             modelBuilder.Entity("CSharpLab4.Models.Player", b =>
                 {
                     b.Property<int>("ID")
@@ -93,21 +70,18 @@ namespace CSharpLab4.Migrations
                     b.Property<string>("Position")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TeamID")
-                        .HasColumnType("int");
-
                     b.HasKey("ID");
 
-                    b.ToTable("Player", (string)null);
+                    b.ToTable("Players");
                 });
 
             modelBuilder.Entity("CSharpLab4.Models.Team", b =>
                 {
-                    b.Property<int>("TeamID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TeamID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<int>("CoachID")
                         .HasColumnType("int");
@@ -115,30 +89,26 @@ namespace CSharpLab4.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("TeamID");
+                    b.HasKey("ID");
 
                     b.HasIndex("CoachID");
 
-                    b.ToTable("Teams", (string)null);
+                    b.ToTable("Teams");
                 });
 
-            modelBuilder.Entity("CSharpLab4.Models.Enrollment", b =>
+            modelBuilder.Entity("PlayerTeam", b =>
                 {
-                    b.HasOne("CSharpLab4.Models.Player", "Player")
-                        .WithMany("Enrollments")
-                        .HasForeignKey("PlayerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("PlayersID")
+                        .HasColumnType("int");
 
-                    b.HasOne("CSharpLab4.Models.Team", "Team")
-                        .WithMany("Enrollments")
-                        .HasForeignKey("TeamID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("TeamsID")
+                        .HasColumnType("int");
 
-                    b.Navigation("Player");
+                    b.HasKey("PlayersID", "TeamsID");
 
-                    b.Navigation("Team");
+                    b.HasIndex("TeamsID");
+
+                    b.ToTable("PlayerTeam");
                 });
 
             modelBuilder.Entity("CSharpLab4.Models.Team", b =>
@@ -152,19 +122,24 @@ namespace CSharpLab4.Migrations
                     b.Navigation("Coach");
                 });
 
+            modelBuilder.Entity("PlayerTeam", b =>
+                {
+                    b.HasOne("CSharpLab4.Models.Player", null)
+                        .WithMany()
+                        .HasForeignKey("PlayersID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CSharpLab4.Models.Team", null)
+                        .WithMany()
+                        .HasForeignKey("TeamsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("CSharpLab4.Models.Coach", b =>
                 {
                     b.Navigation("Teams");
-                });
-
-            modelBuilder.Entity("CSharpLab4.Models.Player", b =>
-                {
-                    b.Navigation("Enrollments");
-                });
-
-            modelBuilder.Entity("CSharpLab4.Models.Team", b =>
-                {
-                    b.Navigation("Enrollments");
                 });
 #pragma warning restore 612, 618
         }

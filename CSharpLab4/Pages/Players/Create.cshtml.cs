@@ -21,7 +21,6 @@ namespace CSharpLab4.Pages.Players
 
         public IActionResult OnGet()
         {
-        ViewData["TeamID"] = new SelectList(_context.Teams, "TeamID", "TeamID");
             return Page();
         }
 

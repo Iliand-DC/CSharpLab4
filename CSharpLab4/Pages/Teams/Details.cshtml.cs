@@ -28,7 +28,9 @@ namespace CSharpLab4.Pages.Teams
                 return NotFound();
             }
 
-            var team = await _context.Teams.FirstOrDefaultAsync(m => m.TeamID == id);
+            var team = await _context.Teams
+                .Include(c=>c.Coach)
+                .FirstOrDefaultAsync(m => m.ID == id);
             if (team == null)
             {
                 return NotFound();

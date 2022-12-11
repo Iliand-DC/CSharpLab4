@@ -25,7 +25,7 @@ namespace CSharpLab4.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Player",
+                name: "Players",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
@@ -33,26 +33,25 @@ namespace CSharpLab4.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Position = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Age = table.Column<int>(type: "int", nullable: false),
-                    TeamID = table.Column<int>(type: "int", nullable: false)
+                    Age = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Player", x => x.ID);
+                    table.PrimaryKey("PK_Players", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Teams",
                 columns: table => new
                 {
-                    TeamID = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CoachID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Teams", x => x.TeamID);
+                    table.PrimaryKey("PK_Teams", x => x.ID);
                     table.ForeignKey(
                         name: "FK_Teams_Coachs_CoachID",
                         column: x => x.CoachID,
@@ -62,40 +61,33 @@ namespace CSharpLab4.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Enrollment",
+                name: "PlayerTeam",
                 columns: table => new
                 {
-                    EnrollmentID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PlayerID = table.Column<int>(type: "int", nullable: false),
-                    TeamID = table.Column<int>(type: "int", nullable: false)
+                    PlayersID = table.Column<int>(type: "int", nullable: false),
+                    TeamsID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Enrollment", x => x.EnrollmentID);
+                    table.PrimaryKey("PK_PlayerTeam", x => new { x.PlayersID, x.TeamsID });
                     table.ForeignKey(
-                        name: "FK_Enrollment_Player_PlayerID",
-                        column: x => x.PlayerID,
-                        principalTable: "Player",
+                        name: "FK_PlayerTeam_Players_PlayersID",
+                        column: x => x.PlayersID,
+                        principalTable: "Players",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Enrollment_Teams_TeamID",
-                        column: x => x.TeamID,
+                        name: "FK_PlayerTeam_Teams_TeamsID",
+                        column: x => x.TeamsID,
                         principalTable: "Teams",
-                        principalColumn: "TeamID",
+                        principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Enrollment_PlayerID",
-                table: "Enrollment",
-                column: "PlayerID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Enrollment_TeamID",
-                table: "Enrollment",
-                column: "TeamID");
+                name: "IX_PlayerTeam_TeamsID",
+                table: "PlayerTeam",
+                column: "TeamsID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Teams_CoachID",
@@ -107,10 +99,10 @@ namespace CSharpLab4.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Enrollment");
+                name: "PlayerTeam");
 
             migrationBuilder.DropTable(
-                name: "Player");
+                name: "Players");
 
             migrationBuilder.DropTable(
                 name: "Teams");

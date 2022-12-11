@@ -19,8 +19,13 @@ namespace CSharpLab4.Data
         public DbSet<Coach> Coachs { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Player>().ToTable(nameof(Player));
-            modelBuilder.Entity<Team>().ToTable(nameof(Teams));
+
+            modelBuilder.Entity<Team>()
+                .HasMany(team => team.Players)
+                .WithMany(player => player.Teams);
+            modelBuilder.Entity<Player>()
+                .HasMany(player => player.Teams)
+                .WithMany(team => team.Players);
             modelBuilder.Entity<Coach>().ToTable(nameof(Coachs));
         }
     }

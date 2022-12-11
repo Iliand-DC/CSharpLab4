@@ -29,7 +29,7 @@ namespace CSharpLab4.Pages.Teams
                 return NotFound();
             }
 
-            var team = await _context.Teams.FirstOrDefaultAsync(m => m.TeamID == id);
+            var team = await _context.Teams.FirstOrDefaultAsync(m => m.ID == id);
 
             if (team == null)
             {
@@ -48,15 +48,16 @@ namespace CSharpLab4.Pages.Teams
             {
                 return NotFound();
             }
-            var team = await _context.Teams.FindAsync(id);
+            var team = await _context.Teams
+                .Include(p => p.Players)
+                .SingleAsync(p => p.ID == id);
 
-            if (team != null)
+            if (team == null)
             {
-                Team = team;
-                _context.Teams.Remove(Team);
-                await _context.SaveChangesAsync();
+                return RedirectToPage("./Index");
             }
-
+            _context.Teams.Remove(team);
+            await _context.SaveChangesAsync();
             return RedirectToPage("./Index");
         }
     }

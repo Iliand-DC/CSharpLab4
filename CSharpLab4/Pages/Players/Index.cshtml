@@ -25,9 +25,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Player[0].Age)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Player[0].Team)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -45,9 +42,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Age)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Team.Name)
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |

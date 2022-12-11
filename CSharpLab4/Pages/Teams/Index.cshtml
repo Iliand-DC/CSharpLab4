@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{id:int?}"
 @model CSharpLab4.Pages.Teams.IndexModel
 
 @{
@@ -19,12 +19,17 @@
             <th>
                 @Html.DisplayNameFor(model => model.Team[0].Coach)
             </th>
-            <th></th>
+            <th>@Html.DisplayNameFor(model => model.Team[0].Players)</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Team) {
-        <tr>
+    @foreach (var item in Model.TeamData.Teams) {
+            string selectedRow = "";
+            if(item.ID==Model.TeamID)
+            {
+                selectedRow = "table-success";
+            }
+            <tr class="@selectedRow">
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
@@ -32,11 +37,46 @@
                 @Html.DisplayFor(modelItem => item.Coach.FullName)
             </td>
             <td>
-                <a asp-page="./Edit" asp-route-id="@item.TeamID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.TeamID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.TeamID">Delete</a>
+                    @{
+                        foreach(var player in item.Players)
+                        {
+                            @player.FullName <br />
+                        }
+                    }
+            </td>
+            <td>
+                @*<a asp-page="./Index" asp-route-id="@item.ID">Select</a>*@
+                <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+@if (Model.TeamData.Players!=null)
+{
+    <h3>Players Taught by Selected Team</h3>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Position</th>
+        </tr>
+        @foreach(var item in Model.TeamData.Players)
+        {
+            string selectedRow = "";
+            if(item.ID == Model.PlayerID)
+            {
+                selectedRow = "table-success";
+            }
+            <tr class="@selectedRow">
+                <td>
+                    @item.FullName
+                </td>
+                <td>
+                    @item.Position
+                </td>
+            </tr>
+        }
+    </table>
+}
